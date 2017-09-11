@@ -13,9 +13,9 @@ navbar:
     - text: "More"
       icon: fa-gear
       menu:
-        - text: "Heading 1"
+        - text: "Manuscript 2"
         - text: "Page A"
-          href: page_a.html
+          href: test_manuscript_2.html
         - text: "Page B"
           href: page_b.html
         - text: "---------"
