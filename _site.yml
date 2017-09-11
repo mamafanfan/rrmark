@@ -15,7 +15,7 @@ navbar:
       menu:
         - text: "Manuscript 2"
         - text: "Page A"
-          href: test_manuscript_2.html
+          href: test_m.html
         - text: "Page B"
           href: page_b.html
         - text: "---------"

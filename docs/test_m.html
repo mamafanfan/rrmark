@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="A Chan, 4mg@outlook.com" />
+
+
+<title>Using R markdown for Scientific Papers</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Rmarkdown Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+    About
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Manuscript 2</li>
+    <li>
+      <a href="test_m.html">Page A</a>
+    </li>
+    <li>
+      <a href="page_b.html">Page B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Heading 2</li>
+    <li>
+      <a href="page_c.html">Page C</a>
+    </li>
+    <li>
+      <a href="page_d.html">Page D</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://example.com">
+    <span class="fa fa-question fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Using R markdown for Scientific Papers</h1>
+<h4 class="author"><em>A Chan, <a href="mailto:4mg@outlook.com">4mg@outlook.com</a></em></h4>
+<h4 class="date"><em>12/3/2015</em></h4>
+
+</div>
+
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="co"># devtools::install_github(&quot;cboettig/knitcitations@v1&quot;)</span>
+  <span class="kw">library</span>(knitcitations); <span class="kw">cleanbib</span>()
+  <span class="kw">cite_options</span>(<span class="dt">citation_format =</span> <span class="st">&quot;pandoc&quot;</span>, <span class="dt">check.entries=</span><span class="ot">FALSE</span>)
+  <span class="kw">library</span>(bibtex)
+  <span class="kw">write.bibtex</span>(<span class="kw">c</span>(<span class="kw">citation</span>(<span class="st">&quot;bibtex&quot;</span>), <span class="kw">citation</span>(<span class="st">&quot;knitr&quot;</span>)[<span class="dv">1</span>], <span class="kw">citation</span>(<span class="st">&quot;knitcitations&quot;</span>), <span class="kw">citation</span>(<span class="st">&quot;xtable&quot;</span>), <span class="kw">citation</span>(<span class="st">&quot;RefManageR&quot;</span>), <span class="kw">citation</span>(<span class="st">&quot;rmarkdown&quot;</span>)), <span class="dt">file=</span><span class="st">&quot;init.bib&quot;</span>)
+  bib &lt;-<span class="st"> </span><span class="kw">read.bibtex</span>(<span class="st">&quot;init.bib&quot;</span>)
+  bib<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">read.bibtex</span>(<span class="st">&quot;citavi.bib&quot;</span>)</code></pre></div>
+<div id="abstract" class="section level3">
+<h3>Abstract</h3>
+<p>This document was created based on a .Rmd template from a blog <a href="http://www.petrkeil.com/?p=2401%3E" title="Simple Rmd Template">post</a> by <span class="citation">Keil (2017)</span>. The R package “knitr” <span class="citation">(Xie 2014, 2015, 2017)</span> has its strengths in reproducible research, but it is not designed to produce citations in various foramts for scientific papers. The .Rmd template makes use of an xml file for formatting citation styles, “knitcitations” <span class="citation">(Boettiger 2017)</span> and “bibtex” <span class="citation">(Francois 2017)</span> for generating citations by DOIs or bibtex.</p>
+</div>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>The template give examples of writing mathematical equations using LaTeX, formatting R outputs using either knitr::kable <span class="citation">(Xie 2014, 2015, 2017)</span> or “xtable” <span class="citation">(Dahl 2016)</span>, producing graphic plots using the base “plot” function and generating citations using automatic DOI lookup or “bibtex” <span class="citation">(Francois 2017)</span> with knitcitations::citep and knitcitations::citet <span class="citation">(Boettiger 2017)</span>.</p>
+</div>
+<div id="methods" class="section level3">
+<h3>Methods</h3>
+<p><a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" title="Rmarkdown Syntax">Rmarkdown</a> <span class="citation">(Allaire <em>et al.</em> 2017)</span> has full documentation for its syntax. Statistical analysis with plots and tables can be easily created in a .Rmd file by embedding and running “R code chunks” while math equations are produced using or . Rmarkdown (v2) has built-in support for citation as it is based on <a href="http://johnmacfarlane.net/pandoc/" title="Pandoc Document Converter">Pandoc</a>, but it does not have automatic DOI lookup and is better suited to work in conjunction with a citation manager from which bibliography files are generated and exported for its use.</p>
+<div id="equations" class="section level4">
+<h4>Equations</h4>
+<p>Inline equations are enclosed by <code>$</code> with no space following or preceding. A separate paragraph for equations is enclosed by <code>$$</code> following/preceding with a single space. <a href="https://www.sharelatex.com/learn/Mathematical_expressions" title="Math Expression (ShareLaTex)">Sharelatex</a> has detailed documentation for creating mathematical expressions.</p>
+<p>The binomial coefficient is defined as</p>
+<pre><code>$$ \binom{n}{k} = \frac{n!}{k!(n-k)!} $$
+or
+\[ ... \]</code></pre>
+<p><span class="math display">\[ \binom{n}{k} = \frac{n!}{k!(n-k)!} \]</span></p>
+<p>These are all Greek <span class="math inline">\(\alpha, \beta, \theta_0, \epsilon_2, \eta, \lambda^2, \mu, \tau, \sigma\)</span></p>
+<p>In least squares prediction models, we estimate <span class="math inline">\(\beta_0, \beta_1, \beta_2, ...\beta_n\)</span> by minimizing the RSS</p>
+<pre><code>\[ RSS=\sum_{i=1}^{n} \Big( y_i - \beta_0 - \sum_{j=1}^{p}\beta_{j}x_{ij}\Big)^2 \]</code></pre>
+<p><span class="math display">\[ RSS=\sum_{i=1}^{n} \Big( y_i - \beta_0 - \sum_{j=1}^{p}\beta_{j}x_{ij}\Big)^2 \]</span></p>
+</div>
+<div id="tables" class="section level4">
+<h4>Tables</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr)
+<span class="kw">library</span>(ISLR)
+<span class="kw">attach</span>(Wage)
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(wage ~<span class="st"> </span><span class="kw">poly</span>(age, <span class="dv">4</span>), <span class="dt">data=</span>Wage)
+<span class="kw">kable</span>(<span class="kw">summary</span>(fit)$coef, <span class="dt">digits=</span><span class="dv">2</span>, <span class="dt">caption=</span><span class="st">&quot;This is a 4th degree polynomial. Coef output knitr::kable&quot;</span>)</code></pre></div>
+<table>
+<caption>This is a 4th degree polynomial. Coef output knitr::kable</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Estimate</th>
+<th align="right">Std. Error</th>
+<th align="right">t value</th>
+<th align="right">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercept)</td>
+<td align="right">111.70</td>
+<td align="right">0.73</td>
+<td align="right">153.28</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td>poly(age, 4)1</td>
+<td align="right">447.07</td>
+<td align="right">39.91</td>
+<td align="right">11.20</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td>poly(age, 4)2</td>
+<td align="right">-478.32</td>
+<td align="right">39.91</td>
+<td align="right">-11.98</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td>poly(age, 4)3</td>
+<td align="right">125.52</td>
+<td align="right">39.91</td>
+<td align="right">3.14</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td>poly(age, 4)4</td>
+<td align="right">-77.91</td>
+<td align="right">39.91</td>
+<td align="right">-1.95</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plots" class="section level4">
+<h4>Plots</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## fit&lt;-lm(Wage$wage~poly(Wage$age,4),data=Wage)
+agelims&lt;-<span class="kw">range</span>(Wage$age)
+age.grid&lt;-<span class="kw">seq</span>(<span class="dt">from=</span>agelims[<span class="dv">1</span>], <span class="dt">to=</span>agelims[<span class="dv">2</span>])
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata=</span><span class="kw">list</span>(<span class="dt">age=</span>age.grid), <span class="dt">se=</span><span class="ot">TRUE</span>)
+se.bands &lt;-<span class="st"> </span><span class="kw">cbind</span>(preds$fit<span class="dv">+2</span>*preds$se.fit, preds$fit<span class="dv">-2</span>*preds$se.fit)
+## par(mfrow=c(1,2), mar=c(4.5,4.5,1,1),oma=c(0,0,4,0))
+<span class="kw">plot</span>(age, wage, <span class="dt">xlim=</span>agelims, <span class="dt">cex=</span>.<span class="dv">5</span>, <span class="dt">col=</span><span class="st">&quot;darkgrey&quot;</span>)
+<span class="kw">title</span>(<span class="st">&quot;Degree-4 Polynomial&quot;</span>, <span class="dt">outer=</span>F)
+<span class="kw">lines</span>(age.grid, preds$fit, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)
+<span class="kw">matlines</span>(age.grid, se.bands, <span class="dt">lwd=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">lty=</span><span class="dv">3</span>)</code></pre></div>
+<div class="figure">
+<img src="test_m_files/figure-html/Wage-1.png" alt="Degree-4 Polynomial. Relationship between Wage and Age (data(Wage) in ILSR. The dotted lines are 95% confidence intervals." />
+<p class="caption">Degree-4 Polynomial. Relationship between Wage and Age (data(Wage) in “ILSR”. The dotted lines are 95% confidence intervals.</p>
+</div>
+</div>
+<div id="citations" class="section level4">
+<h4>Citations</h4>
+<p>In “The Elements of Statistical Learning”, <span class="citation">Hastie <em>et al.</em> (2009)</span> explain with practical examples the application of ridge regression/lasso. The book covers some advanced materials in data mining, inference and prediction. For a less technical treatment of the same subjects, “An Introduction of Statistical Learning” <span class="citation">(James <em>et al.</em> 2013)</span> should be a good start.</p>
+<p>The two types of citation above are respectively generated by</p>
+<pre><code>citet(bib.1[[&quot;Hastie.2009&quot;]]) and
+citep(&quot;DOI 10.1007/978-1-4614-7138-7&quot;)</code></pre>
+<p><code>citet</code> and <code>citep</code> can also refer to either DOI or a bibtex entry, <code>citet(bib.1[[&quot;Hastie.2009&quot;]])</code> generates <span class="citation">Hastie <em>et al.</em> (2009)</span> where “bib.1”&quot; is a R object created by <code>bib.1&lt;-read.bibtex(&quot;name of bibliography file&quot;)</code> and “Hastie.2009” is the bibtex entry ID.</p>
+</div>
+</div>
+<div id="summary" class="section level3">
+<h3>Summary</h3>
+<p>Plots, tables, math equations and citations are indispensible elements of any scientific papers. The Rmd template is a quick and convenient way to produce them. The finished Rmd file can then be “knited” to html, pdf or word format for submission in <a href="http://www.rstudio.com/" title="RStudio">RStudio</a>. To publish this in a jekyll blog, what I did was to knit it to html and include the html file in a post with a liquid tag.</p>
+<p>Finally, the reference list below is produced by using “bibtex” to write out all citations made in the paper <code>write.bibtex(file=&quot;references.bib&quot;)</code>. <code>reference.bib</code> and a style file are declared in the front matter.</p>
+</div>
+<div id="references" class="section level3 unnumbered">
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Allaire_2017">
+<p>Allaire, J., Cheng, J., Xie, Y., McPherson, J., Chang, W., Allen, J., Wickham, H., Atkins, A., Hyndman, R. &amp; Arslan, R. (2017). <em>Rmarkdown: Dynamic documents for r</em>. Retrieved from <a href="https://CRAN.R-project.org/package=rmarkdown" class="uri">https://CRAN.R-project.org/package=rmarkdown</a></p>
+</div>
+<div id="ref-Boettiger_2017">
+<p>Boettiger, C. (2017). <em>Knitcitations: Citations for ’knitr’ markdown files</em>. Retrieved from <a href="https://CRAN.R-project.org/package=knitcitations" class="uri">https://CRAN.R-project.org/package=knitcitations</a></p>
+</div>
+<div id="ref-Dahl_2016">
+<p>Dahl, D.B. (2016). <em>Xtable: Export tables to latex or html</em>. Retrieved from <a href="https://CRAN.R-project.org/package=xtable" class="uri">https://CRAN.R-project.org/package=xtable</a></p>
+</div>
+<div id="ref-Francois_2017">
+<p>Francois, R. (2017). <em>Bibtex: Bibtex parser</em>. Retrieved from <a href="https://CRAN.R-project.org/package=bibtex" class="uri">https://CRAN.R-project.org/package=bibtex</a></p>
+</div>
+<div id="ref-Hastie.2009">
+<p>Hastie, T., Tibshirani, R. &amp; Friedman, J. (2009). <em>The elements of statistical learning</em>. Springer, Dordrecht.</p>
+</div>
+<div id="ref-James_2013">
+<p>James, G., Witten, D., Hastie, T. &amp; Tibshirani, R. (2013). <em>An introduction to statistical learning</em>. Springer New York. Retrieved from <a href="https://doi.org/10.1007/978-1-4614-7138-7" class="uri">https://doi.org/10.1007/978-1-4614-7138-7</a></p>
+</div>
+<div id="ref-greycite28236">
+<p>Keil, P. (2017). » Simple template for scientific manuscripts in r markdown. <em>Petr Keil</em>. Retrieved from <a href="http://www.petrkeil.com/?p=2401" class="uri">http://www.petrkeil.com/?p=2401</a></p>
+</div>
+<div id="ref-Xie_2015">
+<p>Xie, Y. (2015). <em>Dynamic documents with R and knitr</em>, 2nd edn. Chapman; Hall/CRC, Boca Raton, Florida. Retrieved from <a href="https://yihui.name/knitr/" class="uri">https://yihui.name/knitr/</a></p>
+</div>
+<div id="ref-Xie_2014">
+<p>Xie, Y. (2014). Knitr: A comprehensive tool for reproducible research in R. <em>Implementing reproducible computational research</em> (eds V. Stodden, F. Leisch &amp; R.D. Peng). Chapman; Hall/CRC. Retrieved from <a href="http://www.crcpress.com/product/isbn/9781466561595" class="uri">http://www.crcpress.com/product/isbn/9781466561595</a></p>
+</div>
+<div id="ref-Xie_2017">
+<p>Xie, Y. (2017). <em>Knitr: A general-purpose package for dynamic report generation in r</em>. Retrieved from <a href="https://yihui.name/knitr/" class="uri">https://yihui.name/knitr/</a></p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
