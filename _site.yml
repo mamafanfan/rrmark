@@ -1,4 +1,5 @@
 name: "rmarkdown web"
+output_dir: "docs"
 navbar:
   title: "My Rmarkdown Website"
   type: inverse
@@ -26,3 +27,5 @@ navbar:
   right:
     - icon: fa-question fa-lg
       href: https://example.com
+
+
